@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1209</width>
-    <height>803</height>
+    <width>1224</width>
+    <height>963</height>
    </rect>
   </property>
   <property name="contextMenuPolicy">
@@ -17,50 +17,6 @@
    <string>Preprocess_Tool</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QWidget" name="verticalLayoutWidget">
-    <property name="geometry">
-     <rect>
-      <x>40</x>
-      <y>40</y>
-      <width>551</width>
-      <height>401</height>
-     </rect>
-    </property>
-    <layout class="QVBoxLayout" name="verticalLayout">
-     <item>
-      <widget class="QGraphicsView" name="L_graphicsView"/>
-     </item>
-     <item>
-      <widget class="QScrollBar" name="L_horizontalScrollBar">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
-   <widget class="QWidget" name="verticalLayoutWidget_2">
-    <property name="geometry">
-     <rect>
-      <x>610</x>
-      <y>40</y>
-      <width>551</width>
-      <height>401</height>
-     </rect>
-    </property>
-    <layout class="QVBoxLayout" name="verticalLayout_2">
-     <item>
-      <widget class="QGraphicsView" name="R_graphicsView"/>
-     </item>
-     <item>
-      <widget class="QScrollBar" name="R_horizontalScrollBar">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
    <widget class="QWidget" name="gridLayoutWidget">
     <property name="geometry">
      <rect>
@@ -70,11 +26,11 @@
       <height>231</height>
      </rect>
     </property>
-    <layout class="QGridLayout" name="gridLayout">
-     <item row="6" column="0">
-      <widget class="QPushButton" name="L_Morphology_Dilation">
+    <layout class="QGridLayout" name="L_gridLayout">
+     <item row="4" column="0">
+      <widget class="QPushButton" name="L_Morphology_Erode">
        <property name="text">
-        <string>Morphology(dilatation)</string>
+        <string>Morphology(erode)</string>
        </property>
       </widget>
      </item>
@@ -92,24 +48,24 @@
        </property>
       </widget>
      </item>
-     <item row="7" column="0">
+     <item row="9" column="0">
+      <widget class="QPushButton" name="L_Wiener">
+       <property name="text">
+        <string>Wiener</string>
+       </property>
+      </widget>
+     </item>
+     <item row="8" column="0">
       <widget class="QPushButton" name="L_Gabor">
        <property name="text">
         <string>Gabor</string>
        </property>
       </widget>
      </item>
-     <item row="4" column="0">
-      <widget class="QPushButton" name="L_Morphology_Erode">
+     <item row="5" column="0">
+      <widget class="QPushButton" name="L_Morphology_Dilation">
        <property name="text">
-        <string>Morphology(erode)</string>
-       </property>
-      </widget>
-     </item>
-     <item row="8" column="0">
-      <widget class="QPushButton" name="L_Wiener">
-       <property name="text">
-        <string>Wiener</string>
+        <string>Morphology(dilatation)</string>
        </property>
       </widget>
      </item>
@@ -118,20 +74,13 @@
    <widget class="QWidget" name="gridLayoutWidget_2">
     <property name="geometry">
      <rect>
-      <x>620</x>
-      <y>480</y>
+      <x>610</x>
+      <y>470</y>
       <width>181</width>
-      <height>231</height>
+      <height>247</height>
      </rect>
     </property>
-    <layout class="QGridLayout" name="gridLayout_2">
-     <item row="6" column="0">
-      <widget class="QPushButton" name="R_Morphology_Dilation">
-       <property name="text">
-        <string>Morphology(dilatation)</string>
-       </property>
-      </widget>
-     </item>
+    <layout class="QGridLayout" name="R_gridLayout">
      <item row="1" column="0">
       <widget class="QPushButton" name="R_Median">
        <property name="text">
@@ -139,10 +88,10 @@
        </property>
       </widget>
      </item>
-     <item row="0" column="0">
-      <widget class="QPushButton" name="R_Gaussian">
+     <item row="6" column="0">
+      <widget class="QPushButton" name="R_Morphology_Dilation">
        <property name="text">
-        <string>Gaussian</string>
+        <string>Morphology(dilatation)</string>
        </property>
       </widget>
      </item>
@@ -160,6 +109,13 @@
        </property>
       </widget>
      </item>
+     <item row="0" column="0">
+      <widget class="QPushButton" name="R_Gaussian">
+       <property name="text">
+        <string>Gaussian</string>
+       </property>
+      </widget>
+     </item>
      <item row="8" column="0">
       <widget class="QPushButton" name="R_Wiener">
        <property name="text">
@@ -169,21 +125,21 @@
      </item>
     </layout>
    </widget>
-   <widget class="QSpinBox" name="spinBox">
+   <widget class="QSpinBox" name="L_SpinBox">
     <property name="geometry">
      <rect>
       <x>550</x>
-      <y>440</y>
+      <y>460</y>
       <width>42</width>
       <height>22</height>
      </rect>
     </property>
    </widget>
-   <widget class="QSpinBox" name="spinBox_2">
+   <widget class="QSpinBox" name="R_SpinBox">
     <property name="geometry">
      <rect>
       <x>1120</x>
-      <y>440</y>
+      <y>460</y>
       <width>42</width>
       <height>22</height>
      </rect>
@@ -192,8 +148,8 @@
    <widget class="QPushButton" name="Prev_Show_Image">
     <property name="geometry">
      <rect>
-      <x>520</x>
-      <y>730</y>
+      <x>500</x>
+      <y>740</y>
       <width>75</width>
       <height>23</height>
      </rect>
@@ -206,7 +162,7 @@
     <property name="geometry">
      <rect>
       <x>620</x>
-      <y>730</y>
+      <y>740</y>
       <width>75</width>
       <height>23</height>
      </rect>
@@ -215,11 +171,11 @@
      <string>Next</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_15">
+   <widget class="QPushButton" name="L_Reset">
     <property name="geometry">
      <rect>
-      <x>280</x>
-      <y>450</y>
+      <x>270</x>
+      <y>480</y>
       <width>75</width>
       <height>23</height>
      </rect>
@@ -228,17 +184,121 @@
      <string>Reset</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="pushButton_16">
+   <widget class="QPushButton" name="R_Reset">
     <property name="geometry">
      <rect>
       <x>870</x>
-      <y>450</y>
+      <y>480</y>
       <width>75</width>
       <height>23</height>
      </rect>
     </property>
     <property name="text">
      <string>Reset</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="L_Time">
+    <property name="geometry">
+     <rect>
+      <x>520</x>
+      <y>30</y>
+      <width>56</width>
+      <height>12</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>TextLabel</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="R_Time">
+    <property name="geometry">
+     <rect>
+      <x>1100</x>
+      <y>20</y>
+      <width>56</width>
+      <height>12</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>TextLabel</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="L_path_button">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>10</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>path</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="R_path_button">
+    <property name="geometry">
+     <rect>
+      <x>610</x>
+      <y>10</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>path</string>
+    </property>
+   </widget>
+   <widget class="QScrollBar" name="L_horizontalScrollBar">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>440</y>
+      <width>549</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Horizontal</enum>
+    </property>
+   </widget>
+   <widget class="QScrollBar" name="R_horizontalScrollBar">
+    <property name="geometry">
+     <rect>
+      <x>610</x>
+      <y>440</y>
+      <width>549</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Horizontal</enum>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton">
+    <property name="geometry">
+     <rect>
+      <x>400</x>
+      <y>470</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>PushButton</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_2">
+    <property name="geometry">
+     <rect>
+      <x>400</x>
+      <y>500</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>PushButton</string>
     </property>
    </widget>
   </widget>
@@ -247,7 +307,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1209</width>
+     <width>1224</width>
      <height>21</height>
     </rect>
    </property>
