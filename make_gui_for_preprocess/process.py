@@ -200,10 +200,7 @@ class Preprocessor(QtWidgets.QMainWindow, Ui_MainWindow):
         if sender == self.L_Gaussian:
             if len(self.l_image_list) > 0:
                 # Median 필터링을 적용하고 결과 이미지를 img에 저장
-                start_time = time.time()
                 img = cv2.medianBlur(self.l_image_list[self.left_idx], 3)
-                end_time = time.time()
-                elapsed_time = end_time - start_time
                 self.l_image_list[self.left_idx] = img
                 # 결과 이미지를 이미지 뷰어에 출력
                 self.show_images()

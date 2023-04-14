@@ -121,16 +121,128 @@ def apply_clahe(image: np.ndarray, clip_limit: float = 2.0, tile_grid_size: tupl
     return clahe.apply(image)
 
 
-#get orientaton
+def apply_distanceTransform(img, mask) :
+    mask_distance = cv2.distanceTransform(cv2.copyMakeBorder(mask*255, 1, 1, 1, 1, cv2.BORDER_CONSTANT), cv2.DIST_C, 3)[1:-1,1:-1]
+
+def normalize_with_mask(img:np.ndarray,desire_var_ratio:float =0.7,mask:np.ndarray=None):
+    """ 
+    Args :
+        img: 입력 이미지 
+        desire_var_ratio: 목표 분산 비율
+        mask : segmentation mask 
+    Return : normalized_img : np.ndarray 
+    
+    Description :
+        Desired mean과 desired variance는 이미지의 특성에 따라 다르게 설정될 수 있습니다. 따라서 이 값들을 추출하기 위해서는 해당 이미지를 미리 분석하여 적절한 값을 설정하는 것이 좋습니다.
+        일반적으로, desired mean은 이미지에서 밝기의 중간값(median)을 사용하는 것이 일반적입니다. 이는 이미지 전체의 밝기 대략적인 중심값을 나타내므로, 이미지의 대부분의 부분에서 너무 밝거나 어두운 영역이 발생하지 않도록 하는 데 도움이 됩니다.
+        반면에, desired variance는 이미지의 밝기 변화의 정도에 따라 다르게 설정될 수 있습니다. 예를 들어, 밝기 변화가 큰 이미지의 경우 작은 값으로 설정하여 이미지의 대비를 높일 수 있습니다. 하지만 밝기 변화가 작은 이미지의 경우 큰 값으로 설정하여 이미지를 부드럽게 만들 수 있습니다.
+        desired mean과 desired variance를 추출하는 것은 해당 이미지의 특성을 고려하여 적절한 값으로 설정하는 것이 중요합니다.
+
+        Customize
+        *mask를 통하여 ROI부분만 Nomalize합니다. 
+        *이미지의 var과 median을 통하여 desire mean과 desire var를 결정합니다. 이 때 desire_var_ratio를 통하여 이미지에 맞게 목표분산을 바꿔주면 됩니다. 
+    reference : 
+        Hong, l., wan, y., & jain, a. k. (1998). fingerprint image enhancement: algorithms and performance evaluation. ieee transactions on pattern analysis and machine intelligence, 20(8), 777–789.
+    """
+    
+    
+    
+    normalized_img = np.zeros_like(img) # 정규화된 이미지
+
+    if mask is None :
+        m = np.mean(img) # 입력 이미지의 평균\
+        var = np.var(img) # 입력 이미지의 분산
+        desire_mean = np.median(img)
+        desire_var = var*desire_var_ratio
+        for i in range(img.shape[0]):
+            for j in range(img.shape[1]):
+                if img[i,j] > m:
+                    normalized_img[i,j] = desire_mean + np.sqrt((desire_var * (img[i,j]-m)**2) / var)
+                else:
+                    normalized_img[i,j] = desire_mean - np.sqrt((desire_var * (img[i,j]-m)**2) / var)
+
+    else :
+        #마스크에서 0이 아닌부분의 값만 평균과 분산을 낸다.
+        mask_indices = np.argwhere(mask != 0)
+        # 각 위치의 원본 이미지의 픽셀 값을 가져옵니다.
+        pixel_value = img[mask_indices[:, 0], mask_indices[:, 1]] #0이 아닌부분의 픽셀값
+        m = np.mean(pixel_value)
+        var = np.var(pixel_value)
+
+        desire_mean = np.median(pixel_value)
+        desire_var = var*desire_var_ratio
+        for i,j in zip(mask_indices[:, 0],mask_indices[:, 1]):
+                if img[i,j] > m:
+                    normalized_img[i,j] = desire_mean + np.sqrt((desire_var * (img[i,j]-m)**2) / var)
+                else:
+                    normalized_img[i,j] = desire_mean - np.sqrt((desire_var * (img[i,j]-m)**2) / var)
+    return normalized_img
 
 
-# def get_orientation(img:np.ndarray, )
-# """
-# Reference Handbook of Fingerprint Recognition(2022)
-# The simplest and most natural approach for extracting local ridge orientation is based on the computation of gradients in the fingerprint image. The gradient ∇(x, y) at point [x,
-# y] of I is a two-dimensional vector [∇x(x, y),∇y(x, y)], where ∇x and ∇y components are the derivatives of I at [x, y] with respect to the x- and y-directions, respectively. It is well known that the gradient phase angle denotes the direction of the maximum intensity
-# change. Therefore, the direction θ of a hypothetical edge that crosses the region centered at [x, y] is orthogonal to the gradient phase angle at [x, y]. This method, although simple and efficient, has some drawbacks. First, using the classical Prewitt or Sobel convolution masks (Gonzales & Woods, 2007) to determine ∇x and ∇y components of the gradient
-# and computing θ according to the arctangent of the ∇y/∇x ratio present problems due to the non-linearity and discontinuity around 90°
+def convolve(image:np.ndarray, kernel, origin=None, shape=None, pad=True):
+    """
+    args : 
+        image : kernel 연산을 수행할 이미지
+        kernel : kernel 함수혹은 kernel 
+    
 
-# """
+    description : 
+        이 함수는 scipy.signal.convolve2d 함수와 유사한 동작을 수행하지만, convolve 함수는 패딩을 적용하는 방식이 다르고, kernel이 함수일 수도 있다는 점이 다릅니다
+        1. origin이 주어지지 않으면 (0, 0)으로 설정됩니다.
+        2. shape이 주어지지 않으면 image의 크기를 사용합니다.
+        3. 결과를 저장할 빈 result 배열을 생성합니다.
+        4. kernel 함수가 주어지면 kernel을 (0, 0) 위치에서 호출하여 k 변수에 저장합니다. 그렇지 않으면 kernel을 그대로 k에 저장합니다.
+        5. kernel의 중심점 kernelOrigin을 계산합니다.
+        6. image에 패딩을 추가합니다. padding은 위, 아래, 왼쪽, 오른쪽 패딩 크기를 저장하는 튜플입니다.
+        7.result 배열에 슬라이딩 윈도우를 이용하여 kernel을 적용한 결과를 저장합니다.
+        8. result 배열을 반환합니다.
 
+    """
+    if not origin:
+        origin = (0, 0)
+
+    if not shape:
+        shape = (image.shape[0] - origin[0], image.shape[1] - origin[1])
+
+    result = np.empty(shape)
+
+    if callable(kernel):
+        k = kernel(0, 0)
+    else:
+        k = kernel
+
+    kernelOrigin = (-k.shape[0] // 2, -k.shape[1] // 2)
+    kernelShape = k.shape
+
+    topPadding = 0
+    leftPadding = 0
+
+    if pad:
+        topPadding = max(0, -(origin[0] + kernelOrigin[0]))
+        leftPadding = max(0, -(origin[1] + kernelOrigin[1]))
+        bottomPadding = max(
+            0,
+            (origin[0] + shape[0] + kernelOrigin[0] + kernelShape[0]) - image.shape[0],
+        )
+        rightPadding = max(
+            0,
+            (origin[1] + shape[1] + kernelOrigin[1] + kernelShape[1]) - image.shape[1],
+        )
+
+        padding = (topPadding, bottomPadding), (leftPadding, rightPadding)
+
+        if np.max(padding) > 0.0:
+            image = np.pad(image, padding, mode="edge")
+
+    for y in range(shape[0]):
+        for x in range(shape[1]):
+            iy = topPadding + origin[0] + y + kernelOrigin[0]
+            ix = leftPadding + origin[1] + x + kernelOrigin[1]
+
+            block = image[iy : iy + kernelShape[0], ix : ix + kernelShape[1]]
+            if callable(kernel):
+                result[y, x] = np.sum(block * kernel(y, x))
+            else:
+                result[y, x] = np.sum(block * kernel)
+
+    return result
